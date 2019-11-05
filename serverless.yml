@@ -4,7 +4,7 @@ stage: ${opt:stage,'dev'}
 
 custom:
     dynamodb:
-        start:
+        start: 
             port: 8000
             inMemory: true
             migrate: true
@@ -20,9 +20,19 @@ provider:
     defaultStage: dev
     profiles:
       dev: devProfile
+    iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "secretsmanager:*"
+        - "lambda:*"
+        - "dynamodb:*"
+        - "cognito-idp:*"
+        - "ses:*"
+      Resource: "*"
+
 
 functions:
-  get:
+  getcustomerbyid:
     handler: handlers/getcustomerbyid.getcustomer
     events:
       - http:
@@ -30,7 +40,7 @@ functions:
           method: get
           cors: true
         
-  create:
+  createcustomer:
     handler: handlers/addcustomer.createcustomer
     events:
       - http:

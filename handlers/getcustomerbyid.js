@@ -1,8 +1,9 @@
 const responseHandler = require("../common/responsehandler");
 const BaseHandler = require("../common/basehandler");
 const AWS = require('aws-sdk');
-const dynamodb = new AWS.dynamodb();
-const joi = require('joi');
+//const dynamodb = new AWS.dynamodb.DocumentClient();
+const Joi = require('joi');
+const utils = require('../common/utils');
 
 class GetCustomerbyId extends BaseHandler {
     //this is main function
@@ -11,22 +12,41 @@ class GetCustomerbyId extends BaseHandler {
     }
 
     //validation for cid
-    getValidationSchema = () => {
+    getValidationSchema(){
         //validate body schema
         return Joi.object().keys({
             cid: Joi.string().regex(/^[a-zA-Z0-9]*$/).required()
         });
     }
 
-    async process(event, context, callback) {
+    async getCustomerBycid(cid) {
+        
+        let params = {
+            Key: {
+                "cid": cid
+            },
+            TableName: `customer-${process.env.STAGE}`,
+        };
+        let valRes = await this.dynamoDb.get(params).promise();
+        let flag = false;
+        if (valRes && 'Item' in valRes && valRes.Item && 'id' in valRes.Item && valRes.Item.id) {
+            flag = true;
+            return valRes;
+        } else {
+            return flag;
+        }
+    }
 
+    async process(event, context, callback) {
+        
         try {
             let body = event.body ? JSON.parse(event.body) : event;
+            
             // Validate the input
-            await this.validate(body, this.getValidationSchema());
+            await utils.validate(body, this.getValidationSchema());
 
             // Call to get customer
-            await this.getCustomer(body.cid);
+            await this.getCustomerBycid(body.cid);
             return responseHandler.callbackRespondWithSimpleMessage(200, ' Customer Returned Successfully ');
         }
 

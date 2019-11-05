@@ -9,19 +9,20 @@ module.exports = class BaseHandler {
         this.log = log;
     }
     // function to be overriden in subclass
-    async process() {
-      await this.log.debug("base class function");
+    async process(event, context, callback) {
+        this.log.debug('base class function');
     };
 
+
     //instantiating base with subclass tag
-    async handler() {
+    async handler(event, context, callback) {
         this.log.info("Inside BaseHandler", JSON.stringify(event));
         context.callbackWaitsForEmptyEventLoop = false;
         try {
             this.log.info("Inside BaseHandler");
            
             //calling process function of class instantiated
-            let response = await this.process();
+            let response = await this.process(event, context, callback);
             if (response) {
                 this.log.info("Process complete!:", response.body);
             }
