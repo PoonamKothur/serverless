@@ -1,0 +1,39 @@
+service: serverless-customerapi-dynamodb
+
+stage: ${opt:stage,'dev'}
+
+custom:
+    dynamodb:
+        start:
+            port: 8000
+            inMemory: true
+            migrate: true
+            migration: 
+                dir: offline/migrations
+
+provider:
+    name: aws
+    runtime: nodejs10.x
+    timeout: 30
+    region: ${opt:region, 'ap-south-1'}
+    custom:
+    defaultStage: dev
+    profiles:
+      dev: devProfile
+
+functions:
+  get:
+    handler: handlers/getcustomer.handler
+    events:
+      - http:
+          path: /handlers/{id}
+          method: get
+          cors: true
+        
+  create:
+    handler: handlers/createcustomer.handler
+    events:
+      - http:
+          path: /handlers
+          method: post
+          cors: true
