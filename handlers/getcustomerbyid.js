@@ -2,6 +2,7 @@ const responseHandler = require("../common/responsehandler");
 const BaseHandler = require("../common/basehandler");
 const AWS = require('aws-sdk');
 const dynamodb = new AWS.dynamodb();
+const joi = require('joi');
 
 class GetCustomerbyId extends BaseHandler {
     //this is main function
@@ -40,6 +41,6 @@ class GetCustomerbyId extends BaseHandler {
     }
 }
 
-exports.getCustomer = async (event, context, callback) => {
+exports.getcustomer = async (event, context, callback) => {
     return await new GetCustomerbyId().handler(event, context, callback);
 }

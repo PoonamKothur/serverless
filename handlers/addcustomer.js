@@ -1,5 +1,6 @@
 const responseHandler = require("../common/responsehandler");
 const BaseHandler = require("../common/basehandler");
+const Joi = require('joi');
 const AWS = require('aws-sdk');
 const dynamodb = new AWS.dynamodb();
 
@@ -57,7 +58,7 @@ class AddCustomer extends BaseHandler {
     insertCustomer = async (body) => {
 
         let item = {
-            cid: generateRandomcid()
+            cid: this.generateRandomcid()
         }
         const params = {
             TableName: `customer-${process.env.STAGE}`,
