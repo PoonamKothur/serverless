@@ -23,7 +23,7 @@ provider:
 
 functions:
   get:
-    handler: handlers/getcustomer.handler
+    handler: handlers/getcustomerbyid.getcustomer
     events:
       - http:
           path: /handlers/{id}
@@ -31,7 +31,7 @@ functions:
           cors: true
         
   create:
-    handler: handlers/createcustomer.handler
+    handler: handlers/addcustomer.createcustomer
     events:
       - http:
           path: /handlers
