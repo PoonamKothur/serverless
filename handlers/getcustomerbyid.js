@@ -1,7 +1,7 @@
 const responseHandler = require("../common/responsehandler");
 const BaseHandler = require("../common/basehandler");
 const AWS = require('aws-sdk');
-//const dynamodb = new AWS.dynamodb.DocumentClient();
+
 const Joi = require('joi');
 const utils = require('../common/utils');
 
@@ -25,16 +25,20 @@ class GetCustomerbyId extends BaseHandler {
             Key: {
                 "cid": cid
             },
-            TableName: `customer-${process.env.STAGE}`,
+            TableName: `customer-dev`,
         };
-        let valRes = await this.dynamoDb.get(params).promise();
+        const dynamodbclient = new AWS.DynamoDB.DocumentClient();
+        console.log(dynamodbclient);
+        return this.dynamodbclient.scan(params).promise();
+
+        /*let valRes = await this.dynamoDb.query(params).promise();
         let flag = false;
         if (valRes && 'Item' in valRes && valRes.Item && 'id' in valRes.Item && valRes.Item.id) {
             flag = true;
             return valRes;
         } else {
             return flag;
-        }
+        }*/
     }
 
     async process(event, context, callback) {

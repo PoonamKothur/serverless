@@ -13,7 +13,6 @@ module.exports = class BaseHandler {
         this.log.debug('base class function');
     };
 
-
     //instantiating base with subclass tag
     async handler(event, context, callback) {
         this.log.info("Inside BaseHandler", JSON.stringify(event));

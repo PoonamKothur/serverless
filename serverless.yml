@@ -3,7 +3,7 @@ service: serverless-customerapi-dynamodb
 stage: ${opt:stage,'dev'}
 
 custom:
-    dynamodb:
+    dynamodb: 
         start: 
             port: 8000
             inMemory: true
