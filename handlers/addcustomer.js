@@ -9,7 +9,7 @@ class AddCustomer extends BaseHandler {
         super();
     }
 
-    generateRandom = (min, max) => {
+    generateRandomcid = (min, max) => {
         return (Math.random().toString(36).substring(min, max) + Math.random().toString(36).substring(min, max)).toUpperCase();
     }
 
@@ -17,7 +17,7 @@ class AddCustomer extends BaseHandler {
         //validate body schema
         return Joi.object().keys({
             cid: Joi.string().required(),
-            firstName: Joi.string().required(),
+            cuid: Joi.string().required(),
             type: Joi.string().valid(['Consumer', 'Enterprise']).required(),
             scope: Joi.string().valid(['Direct', 'Reseller']).required(),
             customerEmail: Joi.string().email().required(),
@@ -57,7 +57,7 @@ class AddCustomer extends BaseHandler {
     insertCustomer = async (body) => {
 
         let item = {
-            cid: generateRandom()
+            cid: generateRandomcid()
         }
         const params = {
             TableName: `customer-${process.env.STAGE}`,
