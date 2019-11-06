@@ -4,6 +4,7 @@ const Joi = require('joi');
 const AWS = require('aws-sdk');
 const dynamodb = new AWS.dynamodb();
 
+
 class AddCustomer extends BaseHandler {
     //this is main function
     constructor() {
@@ -13,13 +14,14 @@ class AddCustomer extends BaseHandler {
     generateRandomcid = (min, max) => {
         return (Math.random().toString(36).substring(min, max) + Math.random().toString(36).substring(min, max)).toUpperCase();
     }
+    //generate cuid- hexadecimal
+
 
     getValidationSchema = () => {
         //validate body schema
         return Joi.object().keys({
             cid: Joi.string().required(),
-            cuid: Joi.string().required(),
-            type: Joi.string().valid(['Consumer', 'Enterprise']).required(),
+            /*type: Joi.string().valid(['Consumer', 'Enterprise']).required(),
             scope: Joi.string().valid(['Direct', 'Reseller']).required(),
             customerEmail: Joi.string().email().required(),
             primary: {
@@ -36,6 +38,7 @@ class AddCustomer extends BaseHandler {
                 registration: Joi.date().optional(),
                 lastUpdate: Joi.date().optional()
             }
+            */
         });
     }
 
@@ -55,24 +58,35 @@ class AddCustomer extends BaseHandler {
     }
 
     //values insert if customer does not exists
-    insertCustomer = async (body) => {
-
+    createCustomer = async (body) => {
+        const cuid =this.generateRandomcid();
         let item = {
-            cid: this.generateRandomcid()
+            cuid: cuid,
+            cid: body.cid
         }
         const params = {
             TableName: `customer-${process.env.STAGE}`,
-            Item: Object.assign(item, body)
+            Item: Object.assign(item)
         };
         return dynamodb.put(params).promise();
     }
 
-    // This function calls lambda to create customer specific resources
-    //validation for resources
-
-    /*async createCustomerResources(cid) {
-
-    }*/
+   ///get look table 
+    
+    async createCustomerResources() {
+        let item = {
+            id: this.cuid + '-' + '-role-membership',
+            attributes: {
+                pool_id: 12
+            },
+            status: 'success'
+        }
+        const params = {
+            TableName: `admin-customer-resources-${process.env.STAGE}`,
+            Item: Object.assign(item)
+        };
+        return dynamodb.put(params).promise();
+    }
 
     async process(event, context, callback) {
 
@@ -88,7 +102,7 @@ class AddCustomer extends BaseHandler {
             }
 
             // Call to insert customer
-            await this.insertCustomer(body);
+            await this.createCustomer(body);
 
             //call insert customerresorces
             await this.createCustomerResources(body.cid);

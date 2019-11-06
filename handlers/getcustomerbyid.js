@@ -12,7 +12,7 @@ class GetCustomerbyId extends BaseHandler {
     }
 
     //validation for cid
-    getValidationSchema(){
+    getValidationSchema() {
         //validate body schema
         return Joi.object().keys({
             cid: Joi.string().regex(/^[a-zA-Z0-9]*$/).required()
@@ -20,16 +20,14 @@ class GetCustomerbyId extends BaseHandler {
     }
 
     async getCustomerBycid(cid) {
-        
+
         let params = {
-            Key: {
-                "cid": cid
-            },
-            TableName: `customer-dev`,
+          
+            TableName: 'customer'
         };
         const dynamodbclient = new AWS.DynamoDB.DocumentClient();
         console.log(dynamodbclient);
-        return this.dynamodbclient.scan(params).promise();
+        return this.dynamodbclient.get(params).promise();
 
         /*let valRes = await this.dynamoDb.query(params).promise();
         let flag = false;
@@ -42,10 +40,10 @@ class GetCustomerbyId extends BaseHandler {
     }
 
     async process(event, context, callback) {
-        
+
         try {
             let body = event.body ? JSON.parse(event.body) : event;
-            
+
             // Validate the input
             await utils.validate(body, this.getValidationSchema());
 
