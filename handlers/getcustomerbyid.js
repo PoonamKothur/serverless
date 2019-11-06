@@ -1,9 +1,9 @@
 const responseHandler = require("../common/responsehandler");
 const BaseHandler = require("../common/basehandler");
 const AWS = require('aws-sdk');
-
 const Joi = require('joi');
 const utils = require('../common/utils');
+const documentClient = new AWS.DynamoDB.DocumentClient();
 
 class GetCustomerbyId extends BaseHandler {
     //this is main function
@@ -21,13 +21,12 @@ class GetCustomerbyId extends BaseHandler {
 
     async getCustomerBycid(cid) {
 
-        let params = {
+        const params = {
           
             TableName: 'customer'
         };
-        const dynamodbclient = new AWS.DynamoDB.DocumentClient();
-        console.log(dynamodbclient);
-        return this.dynamodbclient.get(params).promise();
+      
+        return this.documentClient.get(params).promise();
 
         /*let valRes = await this.dynamoDb.query(params).promise();
         let flag = false;

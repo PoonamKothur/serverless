@@ -63,6 +63,24 @@ class AddCustomer extends BaseHandler {
         let item = {
             cuid: cuid,
             cid: body.cid
+            /*type: body.type,
+            scope: body.scope,
+            customerEmail: body.customeremail,
+            primary: { 
+                body.primary.firstname,
+                body.primary.lastName,
+                body.primary.email,
+                body.primary.phone
+            },
+            secondary: {
+                body.secondary.firstName,
+                body.secondary.lastName,
+                body.secondary.email,
+                body.secondary.phone,
+                body.secondary.registration,
+                body.secondary.lastUpdate
+            }
+            */
         }
         const params = {
             TableName: `customer-${process.env.STAGE}`,
@@ -71,7 +89,7 @@ class AddCustomer extends BaseHandler {
         return dynamodb.put(params).promise();
     }
 
-   ///get look table 
+   ///get lookup table resources data 
     
     async createCustomerResources() {
         let item = {
