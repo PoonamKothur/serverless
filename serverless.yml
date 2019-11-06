@@ -53,34 +53,10 @@ Properties:
           WriteCapacityUnits: 1
 
 functions:
-  get:
-    handler: students/getStudents.handler
+  getcustomerbyid:
+    handler: handlers/getcustomerbyid.getcustomer
     events:
       - http:
-          path: /students
+          path: /handlers/
           method: get
-          cors: true
-        
-  create:
-    handler: students/addStudents.handler
-    events:
-      - http:
-          path: /students
-          method: post
-          cors: true
-
-  delete:
-    handler: students/deleteStudent.handler
-    events:
-      - http:
-          path: /students/{id}
-          method: delete
-          cors: true
-
-  update:
-    handler: students/updateStudent.handler
-    events:
-      - http:
-          path: /students/{id}
-          method: put
           cors: true
