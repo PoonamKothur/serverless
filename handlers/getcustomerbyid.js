@@ -22,7 +22,6 @@ class GetCustomerbyId extends BaseHandler {
     async getCustomerBycid(cid) {
 
         const params = {
-          
             TableName: 'customer'
         };
       

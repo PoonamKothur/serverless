@@ -1,10 +1,10 @@
-service: serverless-customerapi-dynamodb
+service: serverless-studentapi-dynamodb
 
 stage: ${opt:stage}
 
 custom:
-    dynamodb: 
-        start: 
+    dynamodb:
+        start:
             port: 8000
             inMemory: true
             migrate: true
@@ -20,9 +20,10 @@ provider:
     defaultStage: dev
     profiles:
       dev: devProfile
+  
 
 environment: 
-    DYNAMODB_TABLE: customer
+    DYNAMODB_TABLE: Students
     iamRoleStatements:
     - Effect: Allow
       Action:
@@ -41,29 +42,45 @@ Resource: arn:aws:dynamodb::*:table/${self:provider.environment.DYNAMODB_TABLE}
 Properties:
         AttributeDefinitions:
           -
-            AttributeName: cid
-            AttributeType: s
+            AttributeName: Id
+            AttributeType: N
         KeySchema:
           -
-            AttributeName: cid
+            AttributeName: Id
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
 
 functions:
-  getcustomerbyid:
-    handler: handlers/getcustomerbyid.getcustomer
+  get:
+    handler: students/getStudents.handler
     events:
       - http:
-          path: /handlers/{id}
+          path: /students
           method: get
           cors: true
         
-  createcustomer:
-    handler: handlers/addcustomer.createcustomer
+  create:
+    handler: students/addStudents.handler
     events:
       - http:
-          path: /handlers
+          path: /students
           method: post
+          cors: true
+
+  delete:
+    handler: students/deleteStudent.handler
+    events:
+      - http:
+          path: /students/{id}
+          method: delete
+          cors: true
+
+  update:
+    handler: students/updateStudent.handler
+    events:
+      - http:
+          path: /students/{id}
+          method: put
           cors: true
