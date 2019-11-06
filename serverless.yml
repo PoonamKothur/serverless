@@ -20,7 +20,8 @@ provider:
     defaultStage: dev
     profiles:
       dev: devProfile
- environment: 
+
+environment: 
     DYNAMODB_TABLE: Students
     iamRoleStatements:
     - Effect: Allow
