@@ -22,7 +22,7 @@ provider:
       dev: devProfile
 
 environment: 
-    DYNAMODB_TABLE: cunstomer
+    DYNAMODB_TABLE: customer
     iamRoleStatements:
     - Effect: Allow
       Action:
@@ -41,11 +41,11 @@ Resource: arn:aws:dynamodb::*:table/${self:provider.environment.DYNAMODB_TABLE}
 Properties:
         AttributeDefinitions:
           -
-            AttributeName: id
+            AttributeName: cid
             AttributeType: s
         KeySchema:
           -
-            AttributeName: id
+            AttributeName: cid
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1
